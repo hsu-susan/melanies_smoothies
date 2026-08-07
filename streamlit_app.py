@@ -35,8 +35,14 @@ if ingredients_list:
         ingredients_string += fruit_chosen + ' '      
         search_on=pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
         st.subheader(fruit_chosen + ' Nutrition Information')
-        url = f"https://fruityvice.com/api/fruit/{search_on}"
-        st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
+        try:
+            # Pass SEARCH_ON to the API URL
+            url = f"https://fruityvice.com/api/fruit/{search_on}"
+            response = requests.get(url, timeout=3)
+            response.raise_for_status()
+            st.dataframe(data=response.json(), use_container_width=True)
+        except Exception:
+            st.info(f"Nutrition information for {fruit_chosen} is currently unavailable.")
 
     # st.write(ingredients_string)
 
