@@ -32,15 +32,11 @@ if ingredients_list:
     ingredients_string = ''
 
     for fruit_chosen in ingredients_list:
-        ingredients_string += fruit_chosen + ' '
-        try:
-            search_on=pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
-            st.subheader(fruit_chosen + ' Nutrition Information')
-            url = f"https://my.smoothiefroot.com/api/fruit/{search_on}"
-            response = requests.get(url, timeout=3)
-            response.raise_for_status()
-        except Exception:
-            st.info(f"Nutrition information for {fruit_chosen} is unavailable on trial accounts.")
+        ingredients_string += fruit_chosen + ' '      
+        search_on=pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
+        st.subheader(fruit_chosen + ' Nutrition Information')
+        smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + search_on)  
+        sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
 
     # st.write(ingredients_string)
 
